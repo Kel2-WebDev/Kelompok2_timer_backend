@@ -61,9 +61,7 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
             },
             data: {
               status: "STARTED",
-              time: {
-                set: Math.round(Date.now() / 1000),
-              },
+              time: new Date(),
               elapsedTime:
                 old_data.status !== "PAUSED" ? { set: 0 } : undefined,
             },
@@ -89,8 +87,7 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
 
           if (!old_data || old_data.status !== "STARTED") return;
 
-          const new_elapsed_time =
-            Math.round(Date.now() / 1000) - old_data.time;
+          const new_elapsed_time = Date.now() - old_data.time.getTime();
 
           const res = await app.prisma.timer.update({
             where: {
@@ -131,8 +128,7 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
           )
             return;
 
-          const new_elapsed_time =
-            Math.round(Date.now() / 1000) - old_data.time;
+          const new_elapsed_time = Date.now() - old_data.time.getTime();
 
           const res = await app.prisma.timer.update({
             where: {
@@ -175,7 +171,7 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
             data: {
               status: "RESET",
               elapsedTime: { set: 0 },
-              time: { set: Math.round(Date.now() / 1000) },
+              time: new Date(),
             },
           });
 

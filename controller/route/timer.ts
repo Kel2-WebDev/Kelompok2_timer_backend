@@ -41,7 +41,11 @@ const TimerController: FastifyPluginAsync = async (app, opts) => {
           .code(404)
           .send({ code: 404, message: "Workspace not found" });
 
-      return res.code(200).send(workspace.timers);
+      const serialized_timers = workspace.timers.map((val) => {
+        return { ...val, time: val.time.getTime() };
+      });
+
+      return res.code(200).send(serialized_timers);
     }
   );
 
@@ -78,7 +82,7 @@ const TimerController: FastifyPluginAsync = async (app, opts) => {
         ...req.body,
         id: req.params.id + ":" + humanId("-"),
         elapsedTime: 0,
-        time: Date.now(),
+        time: new Date(),
       };
 
       await app.prisma.workspace.update({
@@ -94,7 +98,13 @@ const TimerController: FastifyPluginAsync = async (app, opts) => {
         .in(req.params.id)
         .emit("timer:new", { ...new_timer, status: "RESET" });
 
-      return res.code(200).send({ ...new_timer, status: "RESET" });
+      return res
+        .code(200)
+        .send({
+          ...new_timer,
+          time: new_timer.time.getTime(),
+          status: "RESET",
+        });
     }
   );
 

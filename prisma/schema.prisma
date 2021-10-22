@@ -11,7 +11,7 @@ model Workspace {
   id          String  @id
   title       String
   description String
-  lastUsed    Int
+  lastUsed    DateTime
   timers      Timer[]
 }
 
@@ -27,7 +27,7 @@ model Timer {
   title       String
   status      TimerStatus
   elapsedTime Int
-  time        Int
+  time        DateTime
   Workspace   Workspace?  @relation(fields: [workspaceId], references: [id])
   workspaceId String?
 }

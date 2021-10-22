@@ -48,7 +48,9 @@ To run the app itself, you must do,
 
    And if in the development you've changed any of the schema (located at `./prisma/schema.prisma`) then do the same command with different names e.g. `yarn prisma migrate dev --name added_bonus_attributes`
 
-5. Now you're done, your database should work with the app
+5. Generate types for the schema using `yarn prisma generate`
+
+6. Now you're done, your database should work with the app
 
 ## License
 

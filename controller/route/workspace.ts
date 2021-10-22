@@ -35,7 +35,10 @@ const WorkspaceRouteController: FastifyPluginAsync = async (app, opts) => {
         where: { id: req.params.id },
       });
 
-      if (workspace) return res.code(200).send(workspace);
+      if (workspace)
+        return res
+          .code(200)
+          .send({ ...workspace, lastUsed: workspace.lastUsed.getTime() });
 
       return res.code(404).send({ code: 404, message: "Workspace not found" });
     }
@@ -64,20 +67,22 @@ const WorkspaceRouteController: FastifyPluginAsync = async (app, opts) => {
         data: {
           ...req.body,
           id: new_workspace_id,
-          lastUsed: Date.now(),
+          lastUsed: new Date(),
           timers: {
             create: {
               id: new_workspace_id + ":" + humanId("-"),
               elapsedTime: 0,
               status: "RESET",
-              time: Date.now(),
+              time: new Date(),
               title: req.body.title + " Default Clock",
             },
           },
         },
       });
 
-      return res.code(201).send(new_workspace);
+      return res
+        .code(201)
+        .send({ ...new_workspace, lastUsed: new_workspace.lastUsed.getTime() });
     }
   );
 
@@ -120,7 +125,10 @@ const WorkspaceRouteController: FastifyPluginAsync = async (app, opts) => {
         .in(req.params.id)
         .emit("workspace:update:" + req.params.id, workspace);
 
-      return res.code(200).send(updated_workspace);
+      return res.code(200).send({
+        ...updated_workspace,
+        lastUsed: updated_workspace.lastUsed.getTime(),
+      });
     }
   );
 
