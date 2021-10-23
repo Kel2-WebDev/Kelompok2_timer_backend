@@ -43,6 +43,19 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
     .on("connection", (socket) => {
       app.log.debug(`Connected!`);
 
+      socket.use((_, next) => {
+        app.prisma.workspace.update({
+          where: {
+            id: socket.key,
+          },
+          data: {
+            lastUsed: new Date(),
+          },
+        });
+
+        next();
+      });
+
       socket.on("start", async (data) => {
         if (typeof data === "string") {
           app.log.debug(`Timer ${data} is starting`);
