@@ -123,7 +123,10 @@ const WorkspaceRouteController: FastifyPluginAsync = async (app, opts) => {
 
       app.io
         .in(req.params.id)
-        .emit("workspace:update:" + req.params.id, workspace);
+        .emit("workspace:update:" + req.params.id, {
+          ...updated_workspace,
+          lastUsed: updated_workspace.lastUsed.getTime(),
+        });
 
       return res.code(200).send({
         ...updated_workspace,

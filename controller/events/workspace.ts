@@ -83,7 +83,10 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
           app.log.debug(`Start of ${data} done, new state`);
           app.log.debug(JSON.stringify(update_response, null, 4));
 
-          app.io.to(socket.key).emit("timer:update", update_response);
+          app.io.to(socket.key).emit("timer:update", {
+            ...update_response,
+            time: update_response.time.getTime(),
+          });
           return;
         }
       });
@@ -120,7 +123,9 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
           app.log.debug(`Pause of ${data} done, new state`);
           app.log.debug(JSON.stringify(res, null, 4));
 
-          app.io.to(socket.key).emit("timer:update", res);
+          app.io
+            .to(socket.key)
+            .emit("timer:update", { ...res, time: res.time.getTime() });
         }
       });
 
@@ -161,7 +166,9 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
           app.log.debug(`Stop of ${data} done, new state`);
           app.log.debug(JSON.stringify(res, null, 4));
 
-          app.io.to(socket.key).emit("timer:update", res);
+          app.io
+            .to(socket.key)
+            .emit("timer:update", { ...res, time: res.time.getTime() });
         }
       });
 
@@ -191,7 +198,9 @@ const WorkspaceEventsController: FastifyPluginAsync = async (app, opts) => {
           app.log.debug(`Stop of ${data} done, new state`);
           app.log.debug(JSON.stringify(res, null, 4));
 
-          app.io.to(socket.key).emit("timer:update", res);
+          app.io
+            .to(socket.key)
+            .emit("timer:update", { ...res, time: res.time.getTime() });
         }
       });
     });

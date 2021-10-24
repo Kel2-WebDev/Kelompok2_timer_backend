@@ -96,7 +96,7 @@ const TimerController: FastifyPluginAsync = async (app, opts) => {
 
       app.io
         .in(req.params.id)
-        .emit("timer:new", { ...new_timer, status: "RESET" });
+        .emit("timer:new", { ...new_timer, status: "RESET", time: new_timer.time.getTime() });
 
       return res.code(200).send({
         ...new_timer,
