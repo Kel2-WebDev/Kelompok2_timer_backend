@@ -98,13 +98,11 @@ const TimerController: FastifyPluginAsync = async (app, opts) => {
         .in(req.params.id)
         .emit("timer:new", { ...new_timer, status: "RESET" });
 
-      return res
-        .code(200)
-        .send({
-          ...new_timer,
-          time: new_timer.time.getTime(),
-          status: "RESET",
-        });
+      return res.code(200).send({
+        ...new_timer,
+        time: new_timer.time.getTime(),
+        status: "RESET",
+      });
     }
   );
 
@@ -132,14 +130,15 @@ const TimerController: FastifyPluginAsync = async (app, opts) => {
         },
       });
 
-      if (!timer)
+      if (!timer) {
         return res
           .code(404)
           .send({ code: 404, message: "There no such timer with that id" });
+      }
 
       await app.prisma.timer.delete({
         where: {
-          id: req.params.workspace_id,
+          id: req.params.timer_id,
         },
       });
 
